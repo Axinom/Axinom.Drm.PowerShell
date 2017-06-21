@@ -34,8 +34,29 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Axinom.Cpix, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Axinom.Cpix.1.0.0\lib\net462\Axinom.Cpix.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Axinom.Toolkit.DotNet, Version=9.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Axinom.Toolkit.9.3.1\lib\net462\Axinom.Toolkit.DotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Axinom.Toolkit.DotNet.Shared, Version=9.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Axinom.Toolkit.9.3.1\lib\net462\Axinom.Toolkit.DotNet.Shared.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="jose-jwt, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\jose-jwt.2.3.0\lib\net461\jose-jwt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.PowerShell.5.ReferenceAssemblies.1.0.0\lib\net4\System.Management.Automation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,6 +71,14 @@
     <Compile Include="..\Resources\ComponentConstants.cs">
       <Link>ComponentConstants.cs</Link>
     </Compile>
+    <Compile Include="AddContentKey.cs" />
+    <Compile Include="AddContentKeysFromCpix.cs" />
+    <Compile Include="ExportLicenseToken.cs" />
+    <Compile Include="LicenseTokenLogic.cs" />
+    <Compile Include="NewLicenseToken.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
