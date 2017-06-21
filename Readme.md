@@ -1,7 +1,7 @@
 Axinom DRM PowerShell module
 ===================
 
-This is a PowerShell 5 module that simplifies working with Axinom DRM. 
+This is a PowerShell 5 module that simplifies working with Axinom DRM.
 
 Platform compatibility
 ======================
@@ -31,6 +31,11 @@ $communicationKey = "TODO: put hex form of communication key here"
 $communicationKeyId = "TODO: put communication key ID here"
 
 $token = New-LicenseToken
+
+# You can customize any part of the token. Its structure is described by the Axinom DRM documentation.
+# As an example, we specify the validity start and end timestamps here.
+$token.begin_date = (Get-Date).AddMinutes(-5).ToString("o")
+$token.expiration_date = (Get-Date).AddHours(1).ToString("o")
 
 # Add a manually specified content key.
 $token = $token | Add-ContentKey -KeyId "8e413433-1e91-47d4-b548-5abbf4f6564e" -KeyAsBase64 "WMDlg3QKs72fEKsquqnPFg==" -CommunicationKeyAsHex $communicationKey
