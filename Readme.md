@@ -37,6 +37,15 @@ $token = New-LicenseToken
 $token.begin_date = (Get-Date).AddMinutes(-5).ToString("o")
 $token.expiration_date = (Get-Date).AddHours(1).ToString("o")
 
+# Here is an example for how to make the PlayReady DRM configuration maximally permissive.
+# This lets you play content on virtual machines and pre-production devices, for easy testing.
+$token.playready = @{
+    "min_app_security_level" = 150
+    "play_enablers" = @(
+        "786627D8-C2A6-44BE-8F88-08AE255B01A7"
+    )
+}
+
 # Add a manually specified content key.
 $token = $token | Add-ContentKey -KeyId "8e413433-1e91-47d4-b548-5abbf4f6564e" -KeyAsBase64 "WMDlg3QKs72fEKsquqnPFg==" -CommunicationKeyAsHex $communicationKey
 
