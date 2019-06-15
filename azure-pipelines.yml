@@ -1,0 +1,31 @@
+name: '$(date:yyyyMMdd)$(rev:.r)'
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- group: "PowerShell Gallery Sander"
+ 
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: Create the binaries
+  inputs:
+    command: publish
+    projects: '**/*.csproj'
+    arguments: '--configuration Release'
+
+- pwsh: |
+    Copy-Item ./Resources/Axinom.Drm.psd1 ./Axinom.Drm.PowerShell/bin/Release/netstandard2.0/publish/
+
+    # The publish command requires a certain naming of the folder.
+    $modulePath = "./Axinom.Drm.PowerShell/bin/Release/netstandard2.0/Axinom.Drm/"
+    Move-Item ./Axinom.Drm.PowerShell/bin/Release/netstandard2.0/publish/ $modulePath
+
+    Install-Module Axinom.DevOpsTooling -Force
+    Set-PowerShellModuleMetadataBeforeBuild -path $modulePath/Axinom.Drm.psd1
+    Set-PowerShellModuleBuildString -path $modulePath/Axinom.Drm.psd1
+    Publish-Module -Path $modulePath -NugetAPIKey "$(PsGalleryKey)"
