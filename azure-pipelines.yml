@@ -11,12 +11,15 @@ variables:
  
 
 steps:
-- task: DotNetCoreCLI@2
-  displayName: Create the binaries
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk'
   inputs:
-    command: publish
-    projects: '**/*.csproj'
-    arguments: '--configuration Release'
+    packageType: sdk
+    version: 2.2.300
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- script: |
+    dotnet publish --configuration Release
 
 - pwsh: |
     Copy-Item ./Resources/Axinom.Drm.psd1 ./Axinom.Drm.PowerShell/bin/Release/netstandard2.0/publish/
