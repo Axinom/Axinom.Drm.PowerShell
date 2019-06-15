@@ -57,7 +57,7 @@ $token.content_key_usage_policies = @(
 )
 
 # Add a manually specified content key. Use the defined permissive policy.
-$token = $token | Add-ContentKey -KeyId "8e413433-1e91-47d4-b548-5abbf4f6564e" -KeyAsBase64 "WMDlg3QKs72fEKsquqnPFg==" -CommunicationKeyAsBase64 $communicationKey -KeyUsagePolicyName $permissivePolicy.name
+$token = $token | Add-ContentKey -KeyId "8e413433-1e91-47d4-b548-5abbf4f6564e" -KeyAsBase64 "WMDlg3QKs72fEKsquqnPFg==" -CommunicationKeyAsBase64 $communicationKeyAsBase64 -KeyUsagePolicyName $permissivePolicy.name
 
 # Add a set of content keys from a CPIX document. Use the defined permissive policy.
 $token = $token | Add-ContentKeysFromCpix -Path "C:\tmp\threekey.xml" -CommunicationKeyAsBase64 $communicationKeyAsBase64  -KeyUsagePolicyName $permissivePolicy.name
