@@ -1,8 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Management.Automation;
 
-namespace Axinom.Drm.Powershell
+namespace Axinom.Drm.PowerShell
 {
     [Cmdlet("New", "LicenseToken")]
     public sealed class NewLicenseToken : PSCmdlet
@@ -12,7 +11,7 @@ namespace Axinom.Drm.Powershell
             WriteObject(new Hashtable()
             {
                 { "type", "entitlement_message" },
-                { "keys", new List<Hashtable>() }
+                { "version", 2 }
             });
         }
     }

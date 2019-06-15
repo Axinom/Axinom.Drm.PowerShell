@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
-namespace Axinom.Drm.Powershell
+namespace Axinom.Drm.PowerShell
 {
     static class LicenseTokenLogic
     {
-        public static void AddKey(Hashtable licenseToken, Guid keyId, byte[] keyValue, byte[] communicationKey)
+        public static void AddKey(Hashtable licenseToken, Guid keyId, byte[] keyValue, byte[] communicationKey, string keyUsagePolicyName)
         {
             byte[] encryptedKey;
 
@@ -31,15 +31,22 @@ namespace Axinom.Drm.Powershell
                 { "encrypted_key", Convert.ToBase64String(encryptedKey) }
             };
 
-            var keys = EnsureKeys(licenseToken);
+            if (!string.IsNullOrWhiteSpace(keyUsagePolicyName))
+                key["usage_policy"] = keyUsagePolicyName;
+
+            var keys = OpenInlineKeysContainer(licenseToken);
             keys.Add(key);
         }
 
-        private static List<Hashtable> EnsureKeys(Hashtable licenseToken)
+        private static List<Hashtable> OpenInlineKeysContainer(Hashtable licenseToken)
         {
-            var keys = licenseToken["keys"] as List<Hashtable> ?? new List<Hashtable>();
-            licenseToken["keys"] = keys;
-            return keys;
+            var keysSource = licenseToken["content_keys_source"] as Hashtable ?? new Hashtable();
+            licenseToken["content_keys_source"] = keysSource;
+
+            var inlineKeys = keysSource["inline"] as List<Hashtable> ?? new List<Hashtable>();
+            keysSource["inline"] = inlineKeys;
+
+            return inlineKeys;
         }
     }
 }

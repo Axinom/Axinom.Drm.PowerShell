@@ -1,12 +1,12 @@
-﻿using Axinom.Toolkit;
-using Jose;
+﻿using Jose;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Management.Automation;
-using System.Web.Script.Serialization;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-namespace Axinom.Drm.Powershell
+namespace Axinom.Drm.PowerShell
 {
     [Cmdlet("Export", "LicenseToken")]
     public sealed class ExportLicenseToken : PSCmdlet
@@ -18,12 +18,12 @@ namespace Axinom.Drm.Powershell
         public Guid CommunicationKeyId { get; set; }
 
         [Parameter(Mandatory = true)]
-        [ValidateLength(64, 64)]
-        public string CommunicationKeyAsHex { get; set; }
+        [ValidateLength(44, 44)]
+        public string CommunicationKeyAsBase64 { get; set; }
 
         protected override void ProcessRecord()
         {
-            var communicationKey = Helpers.Convert.HexStringToByteArray(CommunicationKeyAsHex);
+            var communicationKey = Convert.FromBase64String(CommunicationKeyAsBase64);
             if (communicationKey.Length != 32)
                 throw new NotSupportedException("Communication key must be 256 bits long.");
 
@@ -42,15 +42,32 @@ namespace Axinom.Drm.Powershell
                 envelope["expiration_date"] = LicenseToken["expiration_date"];
 
             // Now we have the outer structure ready. Convert to JSON and then sign.
-            // Use the JavaScriptSerializer because it can deal with Hashtables.
-            var serializer = new JavaScriptSerializer();
-            var json = serializer.Serialize(envelope);
+            var json = JsonConvert.SerializeObject(envelope);
             WriteVerbose(json);
 
             // The output is the signed JOSE object, short-form serialized.
             var joseObject = JWT.Encode(json, communicationKey, JwsAlgorithm.HS256);
 
             WriteObject(joseObject);
+        }
+
+        static ExportLicenseToken()
+        {
+            if (!RuntimeInformation.FrameworkDescription.Contains(".NET Framework"))
+                return;
+
+            // Assembly binding redirects on PowerShell Desktop are broken. We need to do it manually.
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
+
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            var name = new AssemblyName(args.Name);
+
+            if (name.Name == "Newtonsoft.Json")
+                return typeof(JsonSerializer).Assembly;
+
+            return null;
         }
     }
 }

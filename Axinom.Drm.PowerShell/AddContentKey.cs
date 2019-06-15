@@ -1,10 +1,8 @@
-﻿using Axinom.Toolkit;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Management.Automation;
 
-namespace Axinom.Drm.Powershell
+namespace Axinom.Drm.PowerShell
 {
     [Cmdlet("Add", "ContentKey")]
     public sealed class AddContentKey : PSCmdlet
@@ -16,15 +14,19 @@ namespace Axinom.Drm.Powershell
         public Guid KeyId { get; set; }
 
         [Parameter(Mandatory = true)]
+        [ValidateLength(24, 24)]
         public string KeyAsBase64 { get; set; }
 
         [Parameter(Mandatory = true)]
-        [ValidateLength(64, 64)]
-        public string CommunicationKeyAsHex { get; set; }
+        [ValidateLength(44, 44)]
+        public string CommunicationKeyAsBase64 { get; set; }
+
+        [Parameter()]
+        public string KeyUsagePolicyName { get; set; }
 
         protected override void ProcessRecord()
         {
-            var communicationKey = Helpers.Convert.HexStringToByteArray(CommunicationKeyAsHex);
+            var communicationKey = Convert.FromBase64String(CommunicationKeyAsBase64);
             if (communicationKey.Length != 32)
                 throw new NotSupportedException("Communication key must be 256 bits long.");
 
@@ -32,16 +34,9 @@ namespace Axinom.Drm.Powershell
             if (contentKey.Length != 16)
                 throw new NotSupportedException("Content key must be 128 bits long.");
 
-            LicenseTokenLogic.AddKey(LicenseToken, KeyId, contentKey, communicationKey);
+            LicenseTokenLogic.AddKey(LicenseToken, KeyId, contentKey, communicationKey, KeyUsagePolicyName);
 
             WriteObject(LicenseToken);
-        }
-
-        private static List<Hashtable> EnsureKeys(Hashtable licenseToken)
-        {
-            var keys = licenseToken["keys"] as List<Hashtable> ?? new List<Hashtable>();
-            licenseToken["keys"] = keys;
-            return keys;
         }
     }
 }
