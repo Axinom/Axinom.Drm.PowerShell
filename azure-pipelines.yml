@@ -22,7 +22,7 @@ steps:
     dotnet publish --configuration Release
 
 - pwsh: |
-    Copy-Item ./Resources/Axinom.Drm.psd1 ./Axinom.Drm.PowerShell/bin/Release/netstandard2.0/publish/
+    Copy-Item ./Axinom.Drm.psd1 ./Axinom.Drm.PowerShell/bin/Release/netstandard2.0/publish/
 
     # The publish command requires a certain naming of the folder.
     $modulePath = "./Axinom.Drm.PowerShell/bin/Release/netstandard2.0/Axinom.Drm/"
