@@ -18,7 +18,7 @@ The following features are implemented:
 Installation
 ============
 
-`Install-Module AxinomDRM`
+`Install-Module Axinom.Drm`
 
 Quick start: creating a license token
 =========================
