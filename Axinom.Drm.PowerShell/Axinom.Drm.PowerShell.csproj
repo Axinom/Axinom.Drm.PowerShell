@@ -20,7 +20,7 @@
     <PackageReference Include="Axinom.Cpix" Version="2.3.0" />
     <PackageReference Include="Axinom.Toolkit" Version="14.0.0" />
     <PackageReference Include="jose-jwt" Version="2.4.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.0" />
   </ItemGroup>
 
